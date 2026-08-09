@@ -1,0 +1,76 @@
+---
+import { UI } from '../i18n.js';
+const { title, description, lang } = Astro.props;
+const t = UI[lang];
+const other = lang === 'es' ? 'en' : 'es';
+const otherHref = Astro.url.pathname.replace('/' + lang, '/' + other);
+---
+<!doctype html>
+<html lang={lang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <link rel="alternate" hreflang={other} href={otherHref} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site">
+    <a class="brand" href={'/' + lang + '/'}>
+      <span class="logo">LOGO</span>
+      <span>
+        <strong>Domingo en el laboratorio</strong>
+        <small>{t.tagline} &middot; Lola Martin Alonso</small>
+      </span>
+    </a>
+    <nav>
+      <a href={'/' + lang + '/#entradas'}>{t.navPosts}</a>
+      <a href={'/' + lang + '/#sobre'}>{t.navAbout}</a>
+      <a href={'/' + lang + '/#colabora'}>{t.navWork}</a>
+      <a class="sub" href={'/' + lang + '/#newsletter'}>{t.navSub}</a>
+      <span class="lang">
+        <a href={lang === 'es' ? Astro.url.pathname : otherHref} class={lang === 'es' ? 'on' : ''}>ES</a>
+        <a href={lang === 'en' ? Astro.url.pathname : otherHref} class={lang === 'en' ? 'on' : ''}>EN</a>
+      </span>
+    </nav>
+  </header>
+
+  <slot />
+
+  <footer class="site">
+    <span>Domingo en el laboratorio &middot; Lola Martin Alonso</span>
+    <span>Twitter &middot; LinkedIn &middot; Email</span>
+  </footer>
+
+  <style is:global>
+    :root { --paper: #f2efe9; --ink: #14171c; --blue: #1b3a6b; --red: #c0432c; --yellow: #e0a33c; --grey: #55524a; --faint: #85806f; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { color: var(--red); }
+    img { max-width: 100%; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 0 36px; }
+    header.site, footer.site { max-width: 1280px; margin: 0 auto; padding: 26px 36px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    footer.site { border-top: 1.5px solid var(--ink); margin-top: 72px; padding-bottom: 48px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+    .brand { display: flex; align-items: center; gap: 14px; color: inherit; }
+    .brand strong { display: block; font-size: 17px; letter-spacing: -0.01em; }
+    .brand small { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); margin-top: 4px; }
+    .logo { width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid var(--ink); background: #fff; background-image: repeating-linear-gradient(135deg, #e7e2d6 0 6px, #fff 6px 12px); display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 7px; color: var(--faint); }
+    header.site nav { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+    header.site nav a { color: var(--grey); }
+    header.site nav a.sub { color: #fff; background: var(--blue); padding: 9px 18px; border-radius: 999px; font-size: 13px; }
+    .lang { display: flex; gap: 2px; border: 1.5px solid var(--ink); border-radius: 999px; padding: 2px; }
+    .lang a { font-family: 'IBM Plex Mono', monospace; font-size: 11px; padding: 6px 12px; border-radius: 999px; color: var(--grey); }
+    .lang a.on { background: var(--ink); color: var(--paper); }
+    @media (max-width: 800px) {
+      .wrap, header.site, footer.site { padding-left: 20px; padding-right: 20px; }
+      header.site nav { gap: 14px; font-size: 13px; width: 100%; }
+    }
+  </style>
+</body>
+</html>

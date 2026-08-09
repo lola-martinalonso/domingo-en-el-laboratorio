@@ -1,0 +1,6 @@
+# Redirecciones de las URLs viejas de Wix a las nuevas.
+# Una linea por entrada. Formato:  /url-vieja  /url-nueva  301
+/blog/post/los-materiales-tambien-padecen-fatiga   /es/blog/fatiga-de-materiales/   301
+/blog/post/gore-tex-un-material-sin-limites        /es/blog/gore-tex/               301
+/blog/post/materiales-en-la-nieve                  /es/blog/materiales-en-la-nieve/ 301
+/blog                                              /es/                             301
