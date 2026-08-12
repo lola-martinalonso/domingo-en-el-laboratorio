@@ -1,76 +1,65 @@
-# Cómo publico una entrada nueva
+# Como publico una entrada nueva
 
-Tres pasos: imagen → archivo de texto → publicar.
+Desde ahora tienes dos formas. La primera es la buena.
 
-## 1. La imagen
+## Opcion A: el panel (sin ordenador, sin comandos)
 
-Mete el cómic o la infografía en `public/images/`, con un nombre sin espacios ni acentos:
+Entra en **tudominio.com/admin** (o la direccion de Netlify + /admin), inicia sesion con tu
+cuenta de GitHub y ya estas dentro. Funciona igual desde el movil.
 
-```
-public/images/vidrio-liquido.png
-```
+1. Pulsa **New Entrada**.
+2. Rellena titulo, descripcion, fecha, tipo de pieza, nivel y proporcion.
+3. Arrastra la imagen (PNG/JPG) **o** sube el PDF. Si subes PDF, la web lo muestra
+   pagina a pagina ella sola: no hay que partirlo.
+4. Si quieres texto debajo de la pieza, escribelo en el ultimo campo.
+5. **Publish**.
 
-Si quieres que se pueda descargar en alta resolución, mete también el PDF en `public/files/`.
+Netlify reconstruye la web sola en un par de minutos.
 
-## 2. El archivo de la entrada
+Para la version en ingles, repite en la coleccion **Posts in English** con el mismo
+nombre de archivo. Si una entrada solo existe en un idioma, no pasa nada: se vera
+solo en ese idioma.
 
-Duplica cualquier `.md` de `src/content/es/` y renómbralo. El nombre del archivo **es** la dirección de la entrada:
+### Antes de que el panel funcione (una sola vez)
 
-`src/content/es/vidrio-liquido.md` → `tudominio.com/es/blog/vidrio-liquido/`
+En Netlify: **Site configuration - Access control - OAuth - Install provider - GitHub**.
+Necesitas crear una GitHub OAuth App en
+github.com/settings/developers con estos valores:
 
-Dentro, la cabecera entre las dos líneas de `---`:
+- Homepage URL: la direccion de tu web
+- Authorization callback URL: \`https://api.netlify.com/auth/done\`
 
-```yaml
----
-title: "Por qué el vidrio es un líquido raro"
-description: "Ni sólido del todo ni líquido del todo."
-date: 2026-09-14
-format: comic          # comic | infographic | article
-level: curious         # curious | student | technical
-ratio: sq              # la forma real de tu pieza
-minutes: 3
-tags: ["Vidrio"]
-cover: /images/vidrio-liquido.png
-pdf: /files/vidrio-liquido.pdf
----
-```
+Copia el Client ID y el Client Secret en Netlify y listo. Es un tramite de cinco minutos
+y no se repite nunca mas.
 
-Debajo de la cabecera escribes el texto normal. `## Título` hace un subtítulo, `**palabra**` la pone en negrita, `> frase` hace una cita destacada.
+## Opcion B: a mano (si el panel se cae)
 
-### Formatos disponibles en `ratio:`
+1. **Imagen o PDF** en \`public/images/\` o \`public/files/\`. Nombre sin espacios ni acentos.
+2. **Texto**: copia cualquier \`.md\` de \`src/entradas/es/\`, renombralo (el nombre es la URL)
+   y cambia la cabecera.
+3. **Publicar**: en GitHub Desktop escribes una frase y pulsas Commit y Push.
 
-| valor  | forma |
-|--------|-------|
-| `a4v`  | A4 vertical |
-| `a4h`  | A4 horizontal |
-| `a3v`  | A3 vertical |
-| `a3h`  | A3 horizontal |
-| `sq`   | cuadrado |
-| `tall` | vertical largo (infografía de scroll) |
-| `wide` | panorámico |
+## La cabecera, campo por campo
 
-Si te falta una forma, añádela en `src/consts.js`.
+| Campo | Que es |
+|---|---|
+| \`title\` | El titulo. Los emoji valen. |
+| \`description\` | Dos lineas. Sale en la portada y en Google. |
+| \`date\` | Fecha en formato 2025-11-03. Ordena la portada. |
+| \`updated\` | Opcional, si revisas una entrada vieja. |
+| \`format\` | \`comic\`, \`infographic\` o \`article\`. Es el filtro de la portada. |
+| \`level\` | \`curious\`, \`student\` o \`technical\`. |
+| \`ratio\` | La forma real: \`a4v\`, \`a4h\`, \`a3v\`, \`a3h\`, \`sq\`, \`tall13\`, \`tall15\`, \`tall\`, \`wide\`. |
+| \`minutes\` | Minutos de lectura. |
+| \`tags\` | Etiquetas, entre corchetes. |
+| \`cover\` | Ruta de la imagen: \`/images/algo.png\`. |
+| \`pdf\` | Ruta del PDF: \`/files/algo.pdf\`. |
+| \`draft\` | \`true\` la deja oculta. |
 
-### Lector viñeta a viñeta (opcional, para móvil)
+## Ver la web antes de publicar
 
-Si además exportas las viñetas sueltas, añade:
+\`\`\`
+npm run dev
+\`\`\`
 
-```yaml
-panels: ["/images/vidrio-1.png", "/images/vidrio-2.png", "/images/vidrio-3.png"]
-```
-
-Aparece solo el conmutador *Página completa / Viñeta a viñeta*.
-
-## 3. Publicar
-
-Abre GitHub Desktop → escribe un resumen → **Commit** → **Push**. En dos minutos está online.
-
----
-
-## Cosas útiles
-
-- **Guardar un borrador:** añade `draft: true` a la cabecera. No sale publicado.
-- **Solo en español:** no crees el archivo en `src/content/en/`. Nada se rompe.
-- **Cambiar textos del menú, botones o la sección "Sobre mí":** están todos en `src/i18n.js`, en español y en inglés.
-- **Cambiar colores:** en `src/layouts/Base.astro`, arriba del bloque de estilos, en `:root`.
-- **Ver cómo queda antes de publicar:** `npm run dev` en la terminal.
+y abre localhost:4321. Ctrl+C para pararlo.

@@ -1,5 +1,5 @@
-// Lee todos los .md de src/content/<idioma>/ y los ordena por fecha.
-const modules = import.meta.glob('./content/*/*.md', { eager: true });
+// Lee todos los .md de src/entradas/<idioma>/ y los ordena por fecha.
+const modules = import.meta.glob('./entradas/*/*.md', { eager: true });
 
 export function allPosts(lang) {
   return Object.entries(modules)
