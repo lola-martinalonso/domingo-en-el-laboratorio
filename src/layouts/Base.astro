@@ -14,7 +14,7 @@ const otherHref = Astro.url.pathname.replace('/' + lang, '/' + other);
   <meta name="description" content={description} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta name="theme-color" content="#1b3a6b" />
+  <meta name="theme-color" content="#0d0f13" />
   <link rel="alternate" hreflang={other} href={otherHref} />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,8 +24,11 @@ const otherHref = Astro.url.pathname.replace('/' + lang, '/' + other);
 <body>
   <header class="site">
     <a class="brand" href={'/' + lang + '/'}>
-      <strong>Domingo en el laboratorio</strong>
-      <small>{t.tagline} &middot; Lola Martin Alonso</small>
+      <img class="mark" src="/images/domingo/domingo-libro.svg" alt="" width="40" height="51" />
+      <span>
+        <strong>Domingo en el laboratorio</strong>
+        <small>{t.tagline} &middot; Lola Martin Alonso</small>
+      </span>
     </a>
     <nav>
       <a href={'/' + lang + '/#entradas'}>{t.navPosts}</a>
@@ -78,7 +81,8 @@ const otherHref = Astro.url.pathname.replace('/' + lang, '/' + other);
       font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.14em;
       text-transform: uppercase; color: var(--faint); }
     footer.site .links { display: flex; gap: 20px; }
-    .brand { color: inherit; display: block; }
+    .brand { color: inherit; display: flex; align-items: center; gap: 13px; }
+    .brand .mark { width: 40px; height: auto; flex: none; }
     .brand strong { display: block; font-size: 17px; letter-spacing: -0.015em; color: var(--paper); }
     .brand small { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 10px;
       letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); margin-top: 5px; }
