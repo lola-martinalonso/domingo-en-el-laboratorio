@@ -1,2 +1,0 @@
-Pon aqui los PDF descargables.
-Ejemplo: fatiga-de-materiales.pdf -> pdf: /files/fatiga-de-materiales.pdf

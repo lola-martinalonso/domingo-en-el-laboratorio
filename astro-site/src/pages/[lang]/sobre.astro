@@ -1,0 +1,55 @@
+---
+import Base from '../../layouts/Base.astro';
+import { UI, EMAIL, TWITTER, LINKEDIN } from '../../i18n.js';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params;
+const t = UI[lang];
+const a = t.about;
+---
+<Base title={a.title + ' - Domingo en el laboratorio'} description={a.lead} lang={lang}>
+  <article class="wrap page">
+    <div class="kicker">{a.kicker}</div>
+    <h1>{a.title}</h1>
+    <p class="lead">{a.lead}</p>
+    <div class="body">
+      {a.body.map(p => <p>{p}</p>)}
+    </div>
+    <div class="social">
+      <a href={TWITTER}>Twitter</a>
+      <a href={LINKEDIN}>LinkedIn</a>
+    </div>
+
+    <div class="work">
+      <h2>{a.workTitle}</h2>
+      <p>{a.workBody}</p>
+      <a class="btn solid" href={'mailto:' + EMAIL}>{a.workCta}</a>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .page { max-width: 760px; margin: 0 auto; padding-top: 52px; }
+  .kicker { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: 58px; line-height: 1; letter-spacing: -0.04em; font-weight: 600;
+    margin: 20px 0 0; text-wrap: balance; }
+  .lead { font-size: 22px; line-height: 1.5; margin: 28px 0 0; font-weight: 400;
+    letter-spacing: -0.015em; text-wrap: pretty; }
+  .body { margin-top: 8px; }
+  .body p { font-size: 17px; line-height: 1.8; color: var(--muted); font-weight: 300;
+    margin: 24px 0 0; text-wrap: pretty; }
+  .social { display: flex; gap: 18px; margin-top: 36px; font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; }
+  .work { margin-top: 64px; padding-top: 40px; border-top: 1px solid var(--line); }
+  .work h2 { font-size: 32px; font-weight: 600; letter-spacing: -0.03em; margin: 0; }
+  .work p { font-size: 17px; line-height: 1.7; color: var(--muted); font-weight: 300;
+    margin: 16px 0 28px; max-width: 48ch; text-wrap: pretty; }
+  .btn { padding: 14px 26px; border-radius: 999px; font-size: 15px; font-weight: 500; display: inline-block; }
+  .btn.solid { background: var(--fill); color: #fff; border: 1px solid var(--fill-line); }
+  .btn.solid:hover { background: var(--fill-hover); color: #fff; }
+  @media (max-width: 640px) { h1 { font-size: 38px; } .lead { font-size: 19px; } }
+</style>

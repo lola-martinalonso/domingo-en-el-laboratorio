@@ -1,0 +1,3 @@
+Pon aqui tus comics e infografias.
+Ejemplo: fatiga-de-materiales.png
+Desde el .md se referencia como: cover: /images/fatiga-de-materiales.png

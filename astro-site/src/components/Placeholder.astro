@@ -1,0 +1,10 @@
+---
+const { ratio = '1 / 1.414', text = '' } = Astro.props;
+---
+<div class="ph" style={'aspect-ratio:' + ratio}><span>{text}</span></div>
+<style>
+  .ph { width: 100%; display: flex; align-items: center; justify-content: center;
+        background: rgba(255,255,255,0.05); border: 1px dashed rgba(200,212,232,0.35); }
+  span { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.16em;
+         text-transform: uppercase; color: rgba(200,212,232,0.6); text-align: center; padding: 8px; }
+</style>

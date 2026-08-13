@@ -1,0 +1,109 @@
+backend:
+  name: github
+  repo: lola-martinalonso/domingo-en-el-laboratorio
+  branch: main
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+
+publish_mode: simple
+media_folder: "public/images"
+public_folder: "/images"
+
+locale: es
+
+collections:
+  - name: es
+    label: "Entradas en espanol"
+    label_singular: "Entrada"
+    folder: "src/entradas/es"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: "Titulo", widget: string }
+      - { name: description, label: "Descripcion corta", widget: text, hint: "Dos lineas. Sale en la portada y en Google." }
+      - { name: date, label: "Fecha", widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { name: updated, label: "Actualizado el", widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
+      - name: format
+        label: "Tipo de pieza"
+        widget: select
+        options: [{ label: "Comic", value: comic }, { label: "Infografia", value: infographic }, { label: "Articulo", value: article }]
+      - name: level
+        label: "Nivel"
+        widget: select
+        options: [{ label: "Para curiosos", value: curious }, { label: "Estudiantes", value: student }, { label: "Tecnico", value: technical }]
+      - name: ratio
+        label: "Proporcion de la imagen"
+        widget: select
+        hint: "La forma real de la pieza, para que no se recorte."
+        options:
+          - { label: "A4 vertical", value: a4v }
+          - { label: "A4 horizontal", value: a4h }
+          - { label: "A3 vertical", value: a3v }
+          - { label: "A3 horizontal", value: a3h }
+          - { label: "Cuadrada", value: sq }
+          - { label: "Vertical suave", value: tall13 }
+          - { label: "Vertical marcada", value: tall15 }
+          - { label: "Vertical muy alargada", value: tall }
+          - { label: "Panoramica", value: wide }
+      - { name: minutes, label: "Minutos de lectura", widget: number, value_type: int, min: 1, default: 3 }
+      - { name: tags, label: "Etiquetas", widget: list, required: false }
+      - { name: cover, label: "Imagen (PNG o JPG)", widget: image, required: false, hint: "Para infografias en imagen. Si subes PDF, dejalo vacio." }
+      - name: pdf
+        label: "PDF"
+        widget: file
+        required: false
+        media_folder: "/public/files"
+        public_folder: "/files"
+        hint: "Comics e infografias en PDF. La web lo muestra pagina a pagina sola."
+      - { name: draft, label: "Guardar sin publicar", widget: boolean, default: false, required: false }
+      - { name: body, label: "Texto de la entrada", widget: markdown, required: false }
+
+  - name: en
+    label: "Posts in English"
+    label_singular: "Post"
+    folder: "src/entradas/en"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: "Title", widget: string }
+      - { name: description, label: "Short description", widget: text }
+      - { name: date, label: "Date", widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { name: updated, label: "Updated on", widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
+      - name: format
+        label: "Type"
+        widget: select
+        options: [{ label: "Comic", value: comic }, { label: "Infographic", value: infographic }, { label: "Article", value: article }]
+      - name: level
+        label: "Level"
+        widget: select
+        options: [{ label: "For the curious", value: curious }, { label: "Students", value: student }, { label: "Technical", value: technical }]
+      - name: ratio
+        label: "Image shape"
+        widget: select
+        options:
+          - { label: "A4 portrait", value: a4v }
+          - { label: "A4 landscape", value: a4h }
+          - { label: "A3 portrait", value: a3v }
+          - { label: "A3 landscape", value: a3h }
+          - { label: "Square", value: sq }
+          - { label: "Slightly tall", value: tall13 }
+          - { label: "Tall", value: tall15 }
+          - { label: "Very tall", value: tall }
+          - { label: "Panoramic", value: wide }
+      - { name: minutes, label: "Reading minutes", widget: number, value_type: int, min: 1, default: 3 }
+      - { name: tags, label: "Tags", widget: list, required: false }
+      - { name: cover, label: "Image (PNG or JPG)", widget: image, required: false }
+      - name: pdf
+        label: "PDF"
+        widget: file
+        required: false
+        media_folder: "/public/files"
+        public_folder: "/files"
+      - { name: draft, label: "Save without publishing", widget: boolean, default: false, required: false }
+      - { name: body, label: "Post text", widget: markdown, required: false }

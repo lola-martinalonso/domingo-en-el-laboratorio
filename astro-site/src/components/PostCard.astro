@@ -1,0 +1,51 @@
+---
+import { SHAPES, FORMAT_COLOR } from '../consts.js';
+import { UI, LOCALE_TAG } from '../i18n.js';
+import { postUrl } from '../posts.js';
+import Placeholder from './Placeholder.astro';
+
+const { post } = Astro.props;
+const d = post.data;
+const t = UI[post.lang];
+const shape = SHAPES[d.ratio] || SHAPES.photo;
+const fecha = new Date(d.date).toLocaleDateString(LOCALE_TAG[post.lang], { day: 'numeric', month: 'short', year: 'numeric' });
+---
+<article class="card" data-format={d.format}>
+  <a href={postUrl(post)}>
+    <div class="art">
+      {d.cover
+        ? <img src={d.cover} alt={d.title} loading="lazy" />
+        : d.pdf
+          ? <div class="pdfdoc loading" data-pdf={d.pdf} data-pdf-cover style={'aspect-ratio:' + shape.ratio}></div>
+          : <Placeholder ratio={shape.ratio} text={t.formats[d.format] + ' ' + shape.label} />}
+    </div>
+    <div class="meta">
+      <div class="tags">
+        <span class="fmt" style={'color:' + FORMAT_COLOR[d.format]}>{t.formats[d.format]}</span>
+        <span class="lvl">{t.levels[d.level]}</span>
+        <span class="lvl">{shape.label}</span>
+      </div>
+      <h3>{d.title}</h3>
+      <p>{d.description}</p>
+      <div class="foot">{fecha} &middot; {d.minutes} {t.readTime}</div>
+    </div>
+  </a>
+</article>
+<style>
+  .card { break-inside: avoid; margin-bottom: 46px; }
+  a { display: block; color: inherit; }
+  .art { display: block; border-radius: 4px; overflow: hidden; box-shadow: 0 26px 50px -26px #000;
+    transition: transform 0.25s ease, box-shadow 0.25s ease; }
+  .art img { width: 100%; display: block; background: #fff; }
+  .card:hover .art { transform: translateY(-5px); box-shadow: 0 34px 60px -26px #000; }
+  .meta { padding-top: 18px; display: flex; flex-direction: column; gap: 9px; }
+  .tags { display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; }
+  .lvl { color: var(--faint); }
+  h3 { font-size: 21px; font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; margin: 0;
+    color: var(--paper); text-wrap: pretty; }
+  .card:hover h3 { color: #fff; }
+  p { font-size: 14px; line-height: 1.6; color: var(--muted); margin: 0; font-weight: 300; text-wrap: pretty; }
+  .foot { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--faint); }
+</style>
