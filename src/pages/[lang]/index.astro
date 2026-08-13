@@ -1,8 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
 import PostCard from '../../components/PostCard.astro';
-import { allPosts } from '../../posts.js';
-import { UI, EMAIL } from '../../i18n.js';
+import Placeholder from '../../components/Placeholder.astro';
+import { allPosts, postUrl } from '../../posts.js';
+import { UI } from '../../i18n.js';
+import { SHAPES } from '../../consts.js';
 
 export function getStaticPaths() {
   return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
@@ -11,23 +13,42 @@ export function getStaticPaths() {
 const { lang } = Astro.params;
 const t = UI[lang];
 const posts = allPosts(lang);
+const latest = posts[0];
+const latestShape = latest ? (SHAPES[latest.data.ratio] || SHAPES.photo) : SHAPES.a4v;
 const cats = ['all', 'comic', 'infographic', 'article'];
 ---
 <Base title={'Domingo en el laboratorio'} description={t.heroBody} lang={lang}>
   <section class="wrap hero">
-    <div class="kicker">{t.collKicker}</div>
-    <h1>{t.heroTitle}</h1>
-    <p class="lede">{t.heroBody}</p>
+    <div>
+      <div class="kicker red">{t.heroKicker}</div>
+      <h1>{t.heroTitle}</h1>
+      <p class="lede">{t.heroBody}</p>
+      <div class="ctas">
+        {latest && <a class="btn dark" href={postUrl(latest)}>{t.heroCta1}</a>}
+        <a class="btn line" href="#entradas">{t.heroCta2}</a>
+      </div>
+    </div>
+    {latest && (
+      <a class="feature" href={postUrl(latest)}>
+        {latest.data.cover
+          ? <img src={latest.data.cover} alt={latest.data.title} />
+          : <Placeholder ratio={latestShape.ratio} text={t.formats[latest.data.format] + ' ' + latestShape.label} />}
+        <div class="fmeta"><span>{latest.data.title}</span><span>{latestShape.label}</span></div>
+      </a>
+    )}
   </section>
 
   <section class="wrap" id="entradas">
-    <div class="bar">
+    <div class="collhead">
+      <div>
+        <div class="kicker red">{t.collKicker}</div>
+        <h2>{t.collTitle}</h2>
+      </div>
       <div class="filters">
         {cats.map((c, i) => (
           <button class={i === 0 ? 'chip on' : 'chip'} data-filter={c}>{c === 'all' ? t.all : t.formats[c]}</button>
         ))}
       </div>
-      <div class="count mono">{posts.length}</div>
     </div>
 
     {posts.length === 0 && <p class="lede">{t.empty}</p>}
@@ -36,16 +57,33 @@ const cats = ['all', 'comic', 'infographic', 'article'];
     </div>
   </section>
 
-  <section class="wrap">
-    <div class="band">
+  <section class="wrap" id="sobre">
+    <div class="about">
+      <Placeholder ratio="1 / 1" text="foto" />
       <div>
-        <div class="kicker">{t.aboutTitle}</div>
+        <div class="kicker yellow">{t.aboutTitle}</div>
         <p class="big">{t.aboutBody}</p>
+        <div class="ctas">
+          <a class="btn paper" href={'/' + lang + '/sobre/'}>{t.aboutCta}</a>
+          <a class="btn ghost" href="https://twitter.com/lolamartin97">Twitter</a>
+        </div>
       </div>
-      <div class="acts">
-        <a class="btn solid" href={'/' + lang + '/sobre/'}>{t.aboutCta}</a>
-        <a class="btn line" href={'mailto:' + EMAIL}>{t.workCta}</a>
-      </div>
+    </div>
+  </section>
+
+  <section class="wrap two" id="colabora">
+    <div class="box">
+      <h3>{t.workTitle}</h3>
+      <p>{t.workBody}</p>
+      <a class="btn line" href="mailto:hola@ejemplo.com">{t.workCta}</a>
+    </div>
+    <div class="box yellowbox" id="newsletter">
+      <h3>{t.subTitle}</h3>
+      <p>{t.subBody}</p>
+      <form class="sub" name="newsletter" method="POST" data-netlify="true">
+        <input type="email" name="email" placeholder="tu@email.com" required />
+        <button type="submit">{t.subCta}</button>
+      </form>
     </div>
   </section>
 
@@ -63,33 +101,37 @@ const cats = ['all', 'comic', 'infographic', 'article'];
 </Base>
 
 <style>
-  .hero { padding-top: 44px; padding-bottom: 8px; max-width: 900px; margin: 0; }
-  .kicker { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.2em;
-    text-transform: uppercase; color: var(--accent); }
-  h1 { font-size: 72px; line-height: 0.98; letter-spacing: -0.045em; font-weight: 600;
-    margin: 20px 0 0; text-wrap: balance; }
-  .lede { font-size: 19px; line-height: 1.6; color: var(--muted); max-width: 56ch;
-    margin: 24px 0 0; font-weight: 300; text-wrap: pretty; }
-  .bar { display: flex; align-items: center; justify-content: space-between; gap: 24px;
-    flex-wrap: wrap; margin-top: 64px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .hero { display: grid; grid-template-columns: 1fr 0.85fr; gap: 52px; align-items: end; border-top: 1.5px solid var(--ink); padding-top: 32px; margin-top: 8px; }
+  h1 { font-size: 68px; line-height: 1; letter-spacing: -0.04em; font-weight: 600; margin: 18px 0 0; text-wrap: balance; }
+  h2 { font-size: 40px; font-weight: 600; letter-spacing: -0.03em; margin: 10px 0 0; }
+  h3 { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin: 0; }
+  .kicker { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; }
+  .red { color: var(--red); } .yellow { color: var(--yellow); }
+  .lede { font-size: 18px; line-height: 1.65; color: var(--grey); max-width: 46ch; margin: 20px 0 0; font-weight: 300; text-wrap: pretty; }
+  .big { font-size: 30px; line-height: 1.35; letter-spacing: -0.02em; margin: 16px 0 0; max-width: 40ch; text-wrap: pretty; }
+  .ctas { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+  .btn { padding: 13px 24px; border-radius: 999px; font-size: 15px; font-weight: 500; display: inline-block; }
+  .btn.dark { background: var(--ink); color: var(--paper); }
+  .btn.line { border: 1.5px solid var(--ink); color: var(--ink); }
+  .btn.paper { background: var(--paper); color: var(--ink); }
+  .btn.ghost { border: 1px solid #4a4a44; color: var(--paper); }
+  .feature { display: block; background: #fff; border: 1.5px solid var(--ink); padding: 16px; box-shadow: 8px 8px 0 #ded8ca; color: inherit; }
+  .feature img { display: block; width: 100%; }
+  .fmeta { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+  .collhead { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; border-bottom: 1.5px solid var(--ink); padding-bottom: 18px; margin-top: 72px; }
   .filters { display: flex; gap: 8px; flex-wrap: wrap; }
-  .chip { background: transparent; color: var(--muted); border: 1px solid var(--line);
-    padding: 9px 18px; border-radius: 999px; cursor: pointer; font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; transition: all 0.18s ease; }
-  .chip:hover { color: #fff; border-color: var(--accent); }
-  .chip.on { background: var(--accent); color: var(--ink); border-color: var(--accent); }
-  .count { font-size: 10px; letter-spacing: 0.2em; color: var(--faint); }
-  .masonry { column-count: 3; column-gap: 40px; margin-top: 44px; }
-  .band { display: flex; align-items: center; justify-content: space-between; gap: 40px;
-    flex-wrap: wrap; border-top: 1px solid var(--line); margin-top: 44px; padding-top: 44px; }
-  .big { font-size: 30px; line-height: 1.3; letter-spacing: -0.025em; margin: 16px 0 0;
-    max-width: 34ch; font-weight: 400; text-wrap: pretty; }
-  .acts { display: flex; gap: 12px; flex-wrap: wrap; }
-  .btn { padding: 14px 26px; border-radius: 999px; font-size: 15px; font-weight: 500; }
-  .btn.solid { background: var(--accent); color: var(--ink); }
-  .btn.solid:hover { background: #fff; }
-  .btn.line { border: 1px solid var(--line); color: var(--paper); }
-  .btn.line:hover { border-color: var(--accent); color: #fff; }
-  @media (max-width: 1050px) { .masonry { column-count: 2; } h1 { font-size: 52px; } }
-  @media (max-width: 640px) { .masonry { column-count: 1; } h1 { font-size: 38px; } .big { font-size: 24px; } }
+  .chip { background: transparent; color: var(--grey); border: 1.5px solid var(--ink); padding: 8px 16px; border-radius: 999px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .chip.on { background: var(--ink); color: var(--paper); }
+  .masonry { column-count: 3; column-gap: 26px; margin-top: 32px; }
+  .about { display: grid; grid-template-columns: 250px 1fr; gap: 44px; align-items: center; background: var(--ink); color: var(--paper); padding: 44px; margin-top: 76px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 26px; }
+  .box { background: #fff; border: 1.5px solid var(--ink); padding: 36px; }
+  .box p { font-size: 15px; line-height: 1.65; color: var(--grey); margin: 14px 0 24px; max-width: 40ch; font-weight: 300; }
+  .yellowbox { background: var(--yellow); }
+  .yellowbox p { color: #3d3524; font-weight: 400; }
+  .sub { display: flex; gap: 10px; flex-wrap: wrap; }
+  .sub input { flex: 1; min-width: 170px; padding: 13px 16px; border-radius: 999px; border: 1.5px solid var(--ink); background: #fff; font-family: inherit; font-size: 14px; }
+  .sub button { background: var(--ink); color: var(--paper); border: none; padding: 13px 24px; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  @media (max-width: 1000px) { .masonry { column-count: 2; } .hero { grid-template-columns: 1fr; gap: 32px; } h1 { font-size: 48px; } .about { grid-template-columns: 1fr; } .two { grid-template-columns: 1fr; } }
+  @media (max-width: 620px) { .masonry { column-count: 1; } h1 { font-size: 38px; } }
 </style>
